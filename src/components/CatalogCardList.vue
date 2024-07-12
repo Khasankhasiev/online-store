@@ -5,10 +5,6 @@
       image-url="/sneakers/sneakers-1.jpg"
       :price="1205"
     />
-    <Card />
-    <Card />
-    <Card />
-    <Card />
   </div>
 </template>
 
