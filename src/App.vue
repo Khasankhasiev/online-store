@@ -1,5 +1,5 @@
 <template>
-  <Drawer />
+  <!-- <Drawer /> -->
   <div class="bg-white w-4/5 m-auto mt-14 rounded-xl shadow-xl">
     <Header></Header>
     <div class="p-10">
