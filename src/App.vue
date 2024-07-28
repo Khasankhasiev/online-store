@@ -1,7 +1,7 @@
 <template>
-  <Drawer v-if="false" />
+  <Drawer v-if="drawerIsOpen" />
   <div class="bg-white w-4/5 m-auto mt-14 rounded-xl shadow-xl">
-    <Header></Header>
+    <Header @open-drawer="openDrawer"></Header>
     <div class="p-10">
       <div class="flex justify-between items-center">
         <h2 class="text-3xl font-bold mb-8">Все кроссовки</h2>
@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, watch } from 'vue'
+import { onMounted, ref, reactive, watch, provide } from 'vue'
 import axios from 'axios'
 
 import Header from '@/components/MainHeader.vue'
@@ -45,6 +45,17 @@ import CardList from '@/components/CatalogCardList.vue'
 import Drawer from '@/components/CatalogDrawer.vue'
 
 const items = ref([])
+const cart = ref([])
+
+const drawerIsOpen = ref(false)
+
+const closeDrawer = () => {
+  drawerIsOpen.value = false
+}
+
+const openDrawer = () => {
+  drawerIsOpen.value = true
+}
 
 const filters = reactive({
   sortBy: 'title',
@@ -135,6 +146,11 @@ onMounted(async () => {
 })
 
 watch(filters, fetchItems)
+
+provide('cartActions', {
+  closeDrawer,
+  openDrawer
+})
 </script>
 
 <style scoped></style>

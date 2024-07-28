@@ -9,7 +9,10 @@
     </div>
 
     <ul class="flex items-center gap-10">
-      <li class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black">
+      <li
+        @click="emit('openDrawer')"
+        class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black"
+      >
         <img src="/cart.svg" alt="Cart" />
         <b>1205 руб.</b>
       </li>
@@ -25,6 +28,8 @@
   </header>
 </template>
 
-<script setup></script>
+<script setup>
+const emit = defineEmits(['openDrawer'])
+</script>
 
 <style scoped></style>

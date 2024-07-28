@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed top-0 left-0 z-10 w-full h-full bg-black opacity-70"></div>
+  <div @click="closeDrawer" class="fixed top-0 left-0 z-10 w-full h-full bg-black opacity-70"></div>
 
   <div class="fixed top-0 right-0 z-20 w-96 h-full bg-white p-8">
     <DrawerHead />
@@ -18,19 +18,20 @@
         <b>900 руб.</b>
       </div>
 
-      <button 
+      <button
         disabled
-        class="mt-4 bg-lime-500 w-full rounded-xl py-3 text-white hover:bg-lime-600 transition active:bg-lime-700 disabled:bg-slate-300 cursor-pointer">
+        class="mt-4 bg-lime-500 w-full rounded-xl py-3 text-white hover:bg-lime-600 transition active:bg-lime-700 disabled:bg-slate-300 cursor-pointer"
+      >
         Оформить заказ
       </button>
-
     </div>
-
-
   </div>
 </template>
 
 <script setup>
 import DrawerHead from '@/components/DrawerHead.vue'
-import DrawerCartList from '@/components/DrawerCartList.vue';
+import DrawerCartList from '@/components/DrawerCartList.vue'
+import { inject } from 'vue'
+
+const { closeDrawer } = inject('cartActions')
 </script>
