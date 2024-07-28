@@ -6,7 +6,9 @@
       :title="item.title"
       :image-url="item.imageUrl"
       :price="item.price"
-      :onclickAdd="onClickAdd"
+      :id="item.id"
+      :isFavorite="item.isFavorite"
+      :onClickFavorite="() => emit('addToFavorite', item)"
     />
   </div>
 </template>
@@ -18,9 +20,7 @@ defineProps({
   items: Array
 })
 
-const onClickAdd = () => {
-  console.log('Добавлено')
-}
+const emit = defineEmits(['addToFavorite'])
 </script>
 
 <style scoped></style>

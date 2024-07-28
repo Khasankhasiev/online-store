@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="mt-10">
-        <CardList :items="items" />
+        <CardList @addToFavorite="addToFavorite" :items="items" />
       </div>
     </div>
   </div>
@@ -59,6 +59,47 @@ const onChangeSearchInput = (event) => {
   filters.searchQuery = event.target.value
 }
 
+const addToFavorite = async (item) => {
+  try {
+    if (!item.isFavorite) {
+      const obj = {
+        parentId: item.id
+      }
+
+      const { data } = await axios.post('https://2e4a820111f9b349.mokky.dev/favorites', obj)
+      item.isFavorite = true
+      item.favoriteId = data.id
+    } else {
+      await axios.delete(`https://2e4a820111f9b349.mokky.dev/favorites/${item.favoriteId}`)
+      item.isFavorite = false
+
+      item.favoriteId = null
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const fetchFavorites = async () => {
+  try {
+    const { data: favorites } = await axios.get('https://2e4a820111f9b349.mokky.dev/favorites')
+    items.value = items.value.map((item) => {
+      const favorite = favorites.find((favorite) => favorite.parentId === item.id)
+
+      if (!favorite) {
+        return item
+      }
+      return {
+        ...item,
+        isFavorite: true,
+        favoriteId: favorite.id
+      }
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const fetchItems = async () => {
   // fetch('https://2e4a820111f9b349.mokky.dev/items')
   //   .then((res) => res.json())
@@ -77,13 +118,21 @@ const fetchItems = async () => {
     const { data } = await axios.get('https://2e4a820111f9b349.mokky.dev/items', {
       params
     })
-    items.value = data
+    items.value = data.map((obj) => ({
+      ...obj,
+      isFavorite: false,
+      favoriteId: null,
+      isAdded: false
+    }))
   } catch (err) {
     console.log(err)
   }
 }
 
-onMounted(fetchItems)
+onMounted(async () => {
+  await fetchItems()
+  await fetchFavorites()
+})
 
 watch(filters, fetchItems)
 </script>
