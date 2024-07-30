@@ -9,13 +9,13 @@
       <div class="flex gap-2">
         <span>Итого:</span>
         <div class="flex-1 border-b border-dashed"></div>
-        <b>12990 руб.</b>
+        <b>{{ totalPrice }} ₽</b>
       </div>
 
       <div class="flex gap-2">
         <span>Налог 5%:</span>
         <div class="flex-1 border-b border-dashed"></div>
-        <b>900 руб.</b>
+        <b>{{ vatPrice }} ₽</b>
       </div>
 
       <button
@@ -33,5 +33,10 @@ import DrawerHead from '@/components/DrawerHead.vue'
 import DrawerCartList from '@/components/DrawerCartList.vue'
 import { inject } from 'vue'
 
-const { closeDrawer } = inject('cartActions')
+defineProps({
+  totalPrice: Number,
+  vatPrice: Number
+})
+
+const { closeDrawer } = inject('cart')
 </script>

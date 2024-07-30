@@ -1,7 +1,7 @@
 <template>
-  <Drawer v-if="drawerIsOpen" />
+  <Drawer v-if="drawerIsOpen" :total-price="totalPrice" :vat-price="vatPrice" />
   <div class="bg-white w-4/5 m-auto mt-14 rounded-xl shadow-xl">
-    <Header @open-drawer="openDrawer"></Header>
+    <Header :total-price="totalPrice" @open-drawer="openDrawer"></Header>
     <div class="p-10">
       <div class="flex justify-between items-center">
         <h2 class="text-3xl font-bold mb-8">Все кроссовки</h2>
@@ -30,14 +30,14 @@
         </div>
       </div>
       <div class="mt-10">
-        <CardList @addToFavorite="addToFavorite" :items="items" />
+        <CardList @add-to-favorite="addToFavorite" @add-to-cart="onClickAddPlus" :items="items" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, reactive, watch, provide } from 'vue'
+import { onMounted, ref, reactive, watch, provide, computed } from 'vue'
 import axios from 'axios'
 
 import Header from '@/components/MainHeader.vue'
@@ -45,7 +45,11 @@ import CardList from '@/components/CatalogCardList.vue'
 import Drawer from '@/components/CatalogDrawer.vue'
 
 const items = ref([])
+
 const cart = ref([])
+
+const totalPrice = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
+const vatPrice = computed(() => Math.round((totalPrice.value * 5) / 100))
 
 const drawerIsOpen = ref(false)
 
@@ -68,6 +72,24 @@ const onChangeSelect = (event) => {
 
 const onChangeSearchInput = (event) => {
   filters.searchQuery = event.target.value
+}
+
+const addToCart = (item) => {
+  cart.value.push(item)
+  item.isAdded = true
+}
+
+const removeFromCart = (item) => {
+  cart.value.splice(cart.value.indexOf(item), 1)
+  item.isAdded = false
+}
+
+const onClickAddPlus = (item) => {
+  if (!item.isAdded) {
+    addToCart(item)
+  } else {
+    removeFromCart(item)
+  }
 }
 
 const addToFavorite = async (item) => {
@@ -147,9 +169,12 @@ onMounted(async () => {
 
 watch(filters, fetchItems)
 
-provide('cartActions', {
+provide('cart', {
+  cart,
   closeDrawer,
-  openDrawer
+  openDrawer,
+  addToCart,
+  removeFromCart
 })
 </script>
 
