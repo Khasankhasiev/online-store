@@ -1,5 +1,11 @@
 <template>
-  <Drawer v-if="drawerIsOpen" :total-price="totalPrice" :vat-price="vatPrice" />
+  <Drawer
+    v-if="drawerIsOpen"
+    :total-price="totalPrice"
+    :vat-price="vatPrice"
+    @create-order="createOrder"
+    :is-creating-oreder="isCreatingOrder"
+  />
   <div class="bg-white w-4/5 m-auto mt-14 rounded-xl shadow-xl">
     <Header :total-price="totalPrice" @open-drawer="openDrawer"></Header>
     <div class="p-10">
@@ -48,6 +54,8 @@ const items = ref([])
 
 const cart = ref([])
 
+const isCreatingOrder = ref(false)
+
 const totalPrice = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
 const vatPrice = computed(() => Math.round((totalPrice.value * 5) / 100))
 
@@ -82,6 +90,22 @@ const addToCart = (item) => {
 const removeFromCart = (item) => {
   cart.value.splice(cart.value.indexOf(item), 1)
   item.isAdded = false
+}
+
+const createOrder = async () => {
+  try {
+    isCreatingOrder.value = true
+    const { data } = await axios.post('https://2e4a820111f9b349.mokky.dev/orders', {
+      items: cart.value,
+      totalPrice: totalPrice.value
+    })
+    cart.value = []
+    return data
+  } catch (err) {
+    console.log(err)
+  } finally {
+    isCreatingOrder.value = false
+  }
 }
 
 const onClickAddPlus = (item) => {
@@ -168,6 +192,13 @@ onMounted(async () => {
 })
 
 watch(filters, fetchItems)
+
+watch(cart, () => {
+  items.value = items.value.map((item) => ({
+    ...item,
+    isAdded: false
+  }))
+})
 
 provide('cart', {
   cart,

@@ -19,7 +19,8 @@
       </div>
 
       <button
-        disabled
+        :disabled="buttonDisabled"
+        @click="() => emit('createOrder')"
         class="mt-4 bg-lime-500 w-full rounded-xl py-3 text-white hover:bg-lime-600 transition active:bg-lime-700 disabled:bg-slate-300 cursor-pointer"
       >
         Оформить заказ
@@ -31,12 +32,19 @@
 <script setup>
 import DrawerHead from '@/components/DrawerHead.vue'
 import DrawerCartList from '@/components/DrawerCartList.vue'
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 
-defineProps({
+const props = defineProps({
   totalPrice: Number,
-  vatPrice: Number
+  vatPrice: Number,
+  isCreatingOrder: Boolean
 })
 
+const emit = defineEmits('createOrder')
+
 const { closeDrawer } = inject('cart')
+
+const buttonDisabled = computed(() =>
+  props.isCreatingOrder ? true : props.totalPrice ? false : true
+)
 </script>
