@@ -18,8 +18,8 @@
 import { ref, watch, provide, computed } from 'vue'
 import axios from 'axios'
 
-import Header from '@/components/MainHeader.vue'
-import Drawer from '@/components/CatalogDrawer.vue'
+import Header from '@/components/TheHeader.vue'
+import Drawer from '@/components/TheDrawer.vue'
 
 // Корзина (start)
 const cart = ref([])

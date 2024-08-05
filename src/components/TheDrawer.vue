@@ -41,7 +41,7 @@
 
 <script setup>
 import DrawerHead from '@/components/DrawerHead.vue'
-import DrawerCartList from '@/components/DrawerCartList.vue'
+import DrawerCartList from '@/components/CartList.vue'
 import InfoBlock from '@/components/InfoBlock.vue'
 import { computed, inject } from 'vue'
 
