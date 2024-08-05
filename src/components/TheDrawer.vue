@@ -51,7 +51,7 @@ const props = defineProps({
   isCreatingOrder: Boolean
 })
 
-const emit = defineEmits('createOrder')
+const emit = defineEmits(['createOrder'])
 
 const { closeDrawer } = inject('cart')
 

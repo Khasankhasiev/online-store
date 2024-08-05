@@ -11,12 +11,11 @@
     </router-link>
 
     <ul class="flex items-center gap-10">
-      <li
-        @click="emit('openDrawer')"
-        class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black"
-      >
-        <img src="/cart.svg" alt="Cart" />
-        <b>{{ totalPrice }} ₽</b>
+      <li @click="emit('openDrawer')" class="cursor-pointer text-gray-500 hover:text-black">
+        <a class="flex items-center gap-3" href="#">
+          <img src="/cart.svg" alt="Cart" />
+          <b>{{ totalPrice }} ₽</b>
+        </a>
       </li>
       <router-link to="/favorites">
         <li class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black">
@@ -24,9 +23,11 @@
           <span> Закладки</span>
         </li>
       </router-link>
-      <li class="flex items-center cursor-pointer gap-3 text-gray-500 hover:text-black">
-        <img src="/profile.svg" alt="profile" />
-        <span>Профиль</span>
+      <li class="cursor-pointer text-gray-500 hover:text-black">
+        <a class="flex items-center gap-3" href="#" @click.prevent>
+          <img src="/profile.svg" alt="profile" />
+          <span>Профиль</span>
+        </a>
       </li>
     </ul>
   </header>

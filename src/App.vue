@@ -4,7 +4,7 @@
     :total-price="totalPrice"
     :vat-price="vatPrice"
     @create-order="createOrder"
-    :is-creating-oreder="isCreatingOrder"
+    :is-creating-order="isCreatingOrder"
   />
   <div class="bg-white w-4/5 m-auto mt-14 rounded-xl shadow-xl">
     <Header :total-price="totalPrice" @open-drawer="openDrawer"></Header>

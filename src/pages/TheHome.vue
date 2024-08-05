@@ -5,9 +5,7 @@
     <div class="flex gap-4">
       <select
         @change="onChangeSelect"
-        name=""
-        id=""
-        class="py-2 px-3 border rounded-md outline-none"
+        class="py-2 px-3 border rounded-md outline-none focus:border-gray-800"
       >
         <option value="name">По названию</option>
         <option value="price">По цене (дешевые)</option>
