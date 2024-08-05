@@ -30,7 +30,7 @@
 
 <script setup>
 import axios from 'axios'
-
+import debounce from 'lodash.debounce'
 import CardList from '@/components/CatalogCardList.vue'
 import { inject, reactive, watch, ref, onMounted } from 'vue'
 
@@ -47,9 +47,9 @@ const onChangeSelect = (event) => {
   filters.sortBy = event.target.value
 }
 
-const onChangeSearchInput = (event) => {
+const onChangeSearchInput = debounce((event) => {
   filters.searchQuery = event.target.value
-}
+}, 300)
 
 const onClickAddPlus = (item) => {
   if (!item.isAdded) {
@@ -72,7 +72,6 @@ const addToFavorite = async (item) => {
     } else {
       await axios.delete(`https://2e4a820111f9b349.mokky.dev/favorites/${item.favoriteId}`)
       item.isFavorite = false
-
       item.favoriteId = null
     }
   } catch (err) {
@@ -83,29 +82,14 @@ const addToFavorite = async (item) => {
 const fetchFavorites = async () => {
   try {
     const { data: favorites } = await axios.get('https://2e4a820111f9b349.mokky.dev/favorites')
-    items.value = items.value.map((item) => {
-      const favorite = favorites.find((favorite) => favorite.item_id === item.id)
-
-      if (!favorite) {
-        return item
-      }
-      return {
-        ...item,
-        isFavorite: true,
-        favoriteId: favorite.id
-      }
-    })
+    return favorites
   } catch (err) {
     console.log(err)
+    return []
   }
 }
 
 const fetchItems = async () => {
-  // fetch('https://2e4a820111f9b349.mokky.dev/items')
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     console.log(data)
-  //   })
   try {
     const params = {
       sortBy: filters.sortBy
@@ -115,14 +99,13 @@ const fetchItems = async () => {
       params.title = `*${filters.searchQuery}*`
     }
 
-    const { data } = await axios.get('https://2e4a820111f9b349.mokky.dev/items', {
-      params
-    })
+    const { data } = await axios.get('https://2e4a820111f9b349.mokky.dev/items', { params })
+    const favorites = await fetchFavorites()
     items.value = data.map((obj) => ({
       ...obj,
-      isFavorite: false,
-      favoriteId: null,
-      isAdded: false
+      isFavorite: favorites.some((fav) => fav.item_id === obj.id),
+      favoriteId: favorites.find((fav) => fav.item_id === obj.id)?.id || null,
+      isAdded: cart.value.some((cartItem) => cartItem.id == obj.id)
     }))
   } catch (err) {
     console.log(err)
@@ -134,12 +117,6 @@ onMounted(async () => {
   cart.value = localCart ? JSON.parse(localCart) : []
 
   await fetchItems()
-  await fetchFavorites()
-
-  items.value = items.value.map((item) => ({
-    ...item,
-    isAdded: cart.value.some((cartItem) => cartItem.id == item.id)
-  }))
 })
 
 watch(filters, fetchItems)
@@ -147,7 +124,7 @@ watch(filters, fetchItems)
 watch(cart, () => {
   items.value = items.value.map((item) => ({
     ...item,
-    isAdded: false
+    isAdded: cart.value.some((cartItem) => cartItem.id == item.id)
   }))
 })
 </script>

@@ -14,7 +14,7 @@
         <span class="text-slate-400">Цена</span>
         <b>{{ price }} руб.</b>
       </div>
-      <button type="button" @click="onClickAdd">
+      <button type="button" @click.prevent="onClickAdd">
         <img v-if="onClickAdd" :src="!isAdded ? '/plus.svg' : '/checked.svg'" alt="Plus" />
       </button>
     </div>
